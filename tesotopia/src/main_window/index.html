@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TESOTOPIA</title>
+        <meta charset="utf-8"/>
+        <div id="main_window"></div>
+    </head>
+
+    <body>
+        <canvas id="canvas3D" width="500" height="500">Браузер не поддерживает canvas</canvas>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
+
+        <!--ФРАГМЕНТНЫЙ ШЕЙДЕР-->
+        <script id="shader-fs" type="x-shader/x-fragment"">
+            precision highp float;
+            uniform sampler2D uSampler; 
+            varying vec2 vTextureCoords;
+
+            void main(void) {
+	            gl_FragColor = texture2D(uSampler, vTextureCoords);
+            } 
+        </script>
+
+        <!--ВЕРШИННЫЙ ШЕЙДЕР-->
+        <script id="shader-vs" type="x-shader/x-vertex">
+            attribute vec3 aVertexPosition;
+            attribute vec2 aVertexTextureCoords;
+            
+            uniform mat4 uMVMatrix;
+            uniform mat4 uPMatrix;
+
+            varying vec2 vTextureCoords;
+
+            void main(void) {
+                gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,1.0);
+                vTextureCoords = aVertexTextureCoords;
+            }
+        </script>
+
+        <!--ПОДГРУЗКА МУЛЬТИВСЕЛЕННОЙ-->
+        <script type="text/javascript" src="./load_title.js"> </script>
+    </body>
+</html>

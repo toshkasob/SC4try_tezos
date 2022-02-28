@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="./logo192.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <title>TESOTOPIA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <canvas id="canvas3D" width="500" height="500" style="z-index:1">Браузер не поддерживает canvas</canvas>
+     <body oncontextmenu="return false;"></body>
+
+     <!--ФРАГМЕНТНЫЙ ШЕЙДЕР-->
+     <script id="shader-fs" type="x-shader/x-fragment"">
+        precision highp float;
+        uniform sampler2D uSampler; 
+        varying vec2 vTextureCoords;
+        uniform vec4 u_colorPick;
+        uniform vec3 u_Pick_ok;
+        uniform float u_Picked;
+
+        void main(void) {
+          vec3 colorTex = vec3(texture2D(uSampler, vTextureCoords));
+          if (u_Picked == 1.0) {
+	          gl_FragColor = u_colorPick;
+	        } else {
+	        	gl_FragColor =  vec4(u_Pick_ok + colorTex,1.0);
+	        }
+        }
+  </script>
+
+  <!--ВЕРШИННЫЙ ШЕЙДЕР-->
+  <script id="shader-vs" type="x-shader/x-vertex">
+      attribute vec3 aVertexPosition;
+      attribute vec2 aVertexTextureCoords;
+      
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+
+      varying vec2 vTextureCoords;
+
+      void main(void) {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,1.0);
+          vTextureCoords = aVertexTextureCoords;
+      }
+  </script>
+
+  <script id="shader-fs-2d" type="x-shader/x-fragment-2d">
+    precision highp float;
+    uniform sampler2D uSampler;
+    varying vec2 vTextureCoords;
+    uniform vec4 u_colorDraw;
+    uniform float u_Draw;
+     
+      void main(void) {
+        if (u_Draw == 1.0) {
+          gl_FragColor=u_colorDraw;
+        } else {
+          gl_FragColor = texture2D(uSampler, vTextureCoords);
+        }
+      }
+    </script>
+     
+    <script id="shader-vs-2d" type="x-shader/x-vertex-2d">
+      attribute vec3 aVertexPosition;
+      attribute vec2 aVertexTextureCoords;
+      varying vec2 vTextureCoords;
+      attribute vec4 a_Position;
+      uniform float u_Draw;
+     
+      void main(void) {
+        if (u_Draw == 1.0) {
+          gl_Position = a_Position;
+          gl_PointSize = 2.0;
+        } else {
+          gl_Position = vec4(aVertexPosition, 1.0);
+          vTextureCoords = aVertexTextureCoords;
+        }
+      }
+    </script>
+
+  </body>
+</html>

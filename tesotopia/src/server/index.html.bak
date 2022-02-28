@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="./logo192.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <title>TESOTOPIA</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <canvas id="canvas3D" width="500" height="500">Браузер не поддерживает canvas</canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.4.0/gl-matrix-min.js"></script>
+     <!--ФРАГМЕНТНЫЙ ШЕЙДЕР-->
+     <script id="shader-fs" type="x-shader/x-fragment"">
+      precision highp float;
+      uniform sampler2D uSampler; 
+      varying vec2 vTextureCoords;
+
+      void main(void) {
+        gl_FragColor = texture2D(uSampler, vTextureCoords);
+      } 
+  </script>
+
+  <!--ВЕРШИННЫЙ ШЕЙДЕР-->
+  <script id="shader-vs" type="x-shader/x-vertex">
+      attribute vec3 aVertexPosition;
+      attribute vec2 aVertexTextureCoords;
+      
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+
+      varying vec2 vTextureCoords;
+
+      void main(void) {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,1.0);
+          vTextureCoords = aVertexTextureCoords;
+      }
+  </script>
+
+  <!--ПОДГРУЗКА МУЛЬТИВСЕЛЕННОЙ-->
+  <script type="text/javascript" src="${__dirname}/load_title.js"> </script>
+  </body>
+</html>
